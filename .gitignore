@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.so
+*.dylib
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# FastAPI / Uvicorn
+*.log
+
+# VS Code settings
+.vscode/
+.settings/
+
+# Environment variables
+.env
+*.env
+
+# macOS
+.DS_Store
+
+# Byte-compiled / cache
+.cache/
+pytest_cache/
+
+# Qdrant or embeddings data (local only)
+embeddings/
+data/images/
+
+# Python packaging
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Logs, temp files
+*.tmp
+*.temp
+*.log
