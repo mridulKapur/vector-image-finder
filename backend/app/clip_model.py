@@ -21,7 +21,8 @@ def embed_image(path:str) -> List[float]:
     with torch.no_grad():
         emb = model.encode_image(tensor)
         emb = emb / emb.norm(dim=1,keepdim=True)
-    return emb.cpu().numpy()[0].toList()
+    finalList = emb.cpu().numpy()[0].tolist()
+    return finalList
 
 def embed_text(text: str) -> List[float]:
     model, _ = load_model()
