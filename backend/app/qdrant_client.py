@@ -33,5 +33,7 @@ def upsert_points(points: list):
 
 def search_vector(vector: list, limit: int = 20):
     q = get_qdrant()
-    hits = q.search(collection_name=QDRANT_COLLECTION, query_vector=vector, limit=limit)
+    hits = q.query_points(collection_name=QDRANT_COLLECTION, query=vector, limit=limit,with_payload=True).points
+    # for h in hits:
+    print(hits)
     return hits
