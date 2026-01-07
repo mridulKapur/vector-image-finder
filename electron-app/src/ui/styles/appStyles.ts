@@ -1,0 +1,142 @@
+import type { CSSProperties } from "react";
+
+export const appStyles: Record<string, CSSProperties> = {
+    app: {
+        minHeight: "100vh",
+        background: "linear-gradient(to bottom, #f8f9fa, #ffffff)",
+        fontFamily:
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif",
+        color: "#1d1d1f",
+        padding: "20px",
+    },
+    container: {
+        maxWidth: "1200px",
+        margin: "0 auto",
+    },
+    header: {
+        textAlign: "center",
+        marginBottom: "40px",
+        paddingTop: "40px",
+    },
+    title: {
+        fontSize: "48px",
+        fontWeight: 700,
+        letterSpacing: "-0.02em",
+        marginBottom: "8px",
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+    },
+    subtitle: {
+        fontSize: "18px",
+        color: "#86868b",
+        fontWeight: 400,
+    },
+    searchContainer: {
+        position: "relative",
+        maxWidth: "600px",
+        margin: "0 auto 32px",
+    },
+    searchIcon: {
+        position: "absolute",
+        left: "20px",
+        top: "50%",
+        transform: "translateY(-50%)",
+        color: "#86868b",
+        pointerEvents: "none",
+    },
+    searchInput: {
+        width: "100%",
+        padding: "16px 20px 16px 52px",
+        fontSize: "17px",
+        border: "none",
+        borderRadius: "12px",
+        background: "#ffffff",
+        boxShadow:
+            "0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.06)",
+        transition: "all 0.2s ease",
+        outline: "none",
+    },
+    actions: {
+        display: "flex",
+        gap: "12px",
+        justifyContent: "center",
+        flexWrap: "wrap",
+        marginBottom: "24px",
+    },
+    btn: {
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        padding: "12px 24px",
+        fontSize: "15px",
+        fontWeight: 500,
+        border: "none",
+        borderRadius: "10px",
+        cursor: "pointer",
+        transition: "all 0.2s ease",
+        outline: "none",
+    },
+    btnPrimary: {
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        color: "white",
+        boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
+    },
+    btnSecondary: {
+        background: "#ffffff",
+        color: "#667eea",
+        boxShadow:
+            "0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.06)",
+    },
+    btnDisabled: {
+        opacity: 0.5,
+        cursor: "not-allowed",
+    },
+    folderInfo: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        padding: "12px 20px",
+        background: "#f5f5f7",
+        borderRadius: "8px",
+        color: "#515154",
+        fontSize: "14px",
+        marginBottom: "40px",
+        maxWidth: "600px",
+        marginLeft: "auto",
+        marginRight: "auto",
+    },
+    resultsSection: {
+        marginTop: "48px",
+    },
+    resultsTitle: {
+        fontSize: "24px",
+        fontWeight: 600,
+        marginBottom: "24px",
+        color: "#1d1d1f",
+    },
+    grid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+        gap: "24px",
+    },
+    emptyState: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "80px 20px",
+        color: "#86868b",
+        gap: "12px",
+    },
+    emptyStateText: {
+        fontSize: "20px",
+        fontWeight: 500,
+        color: "#515154",
+    },
+    emptyStateSubtext: {
+        fontSize: "15px",
+    },
+};

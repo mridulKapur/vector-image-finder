@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-type SearchResult = { path: string; score?: number };
+export type SearchResult = { path: string; score?: number };
 
 export function useApi() {
     const [loading, setLoading] = useState(false);
@@ -28,14 +28,15 @@ export function useApi() {
         try {
             const res = await window.electronAPI.search(q);
             // backend returns { results: [{path, score}] }
+            console.log(res?.results);
             return res?.results || [];
         } finally {
             setLoading(false);
         }
     }, []);
 
-    const thumbnailUrl = useCallback(async (path: string, size = 256) => {
-        return await window.electronAPI.thumbnailUrl(path, size);
+    const fileUrl = useCallback((path: string): string => {
+        return window.electronAPI.fileUrl(path);
     }, []);
 
     const openPath = useCallback(async (p: string) => {
@@ -47,7 +48,7 @@ export function useApi() {
         selectFolder,
         indexFolder,
         search,
-        thumbnailUrl,
+        fileUrl,
         openPath,
     };
 }

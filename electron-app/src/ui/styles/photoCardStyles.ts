@@ -1,0 +1,71 @@
+import { type CSSProperties } from "react";
+
+export const photoCardStyles: Record<string, CSSProperties> = {
+    card: {
+        background: "white",
+        borderRadius: "16px",
+        overflow: "hidden",
+        boxShadow:
+            "0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.06)",
+        transition: "all 0.3s ease",
+        cursor: "pointer",
+    },
+    wrapper: {
+        position: "relative",
+        aspectRatio: "4/3",
+        overflow: "hidden",
+        background: "#f5f5f7",
+    },
+    img: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        transition: "transform 0.3s ease",
+    },
+    overlay: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: "rgba(0, 0, 0, 0.4)",
+        opacity: 0,
+        transition: "opacity 0.3s ease",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    openBtn: {
+        padding: "12px",
+        background: "white",
+        border: "none",
+        borderRadius: "50%",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "transform 0.2s ease",
+    },
+    info: {
+        padding: "16px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    path: {
+        fontSize: "15px",
+        fontWeight: 500,
+        color: "#1d1d1f",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+    },
+    score: {
+        fontSize: "13px",
+        color: "#667eea",
+        fontWeight: 600,
+        background: "rgba(102, 126, 234, 0.1)",
+        padding: "4px 10px",
+        borderRadius: "6px",
+    },
+};

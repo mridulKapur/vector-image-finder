@@ -1,82 +1,171 @@
-// electron-app/src/ui/App.tsx
-import React, { useState } from 'react';
-import { useApi } from '@/ui/hooks/useApi';
-
-type Result = { path: string; score?: number };
+import { useState } from "react";
+import { Search, Folder, RefreshCw } from "lucide-react";
+import { useApi, type SearchResult } from "@/ui/hooks/useApi";
+import { PhotoCard } from "./components/PhotoCard";
+import { appStyles } from "@/ui/styles/appStyles";
 
 export default function App() {
-  const { loading, selectFolder, indexFolder, search, thumbnailUrl, openPath } = useApi();
-  const [folder, setFolder] = useState<string | null>(null);
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Result[]>([]);
+    const { selectFolder, indexFolder, search, fileUrl, openPath, loading } =
+        useApi();
+    const [folder, setFolder] = useState<string | null>(null);
+    const [query, setQuery] = useState("");
+    const [results, setResults] = useState<SearchResult[]>([]);
+    const [isIndexing, setIsIndexing] = useState(false);
+    const [searchFocused, setSearchFocused] = useState(false);
+    const [hoveredBtn, setHoveredBtn] = useState<string | null>(null);
 
-  const onChooseFolder = async () => {
-    const f = await selectFolder();
-    if (f) setFolder(f);
-  };
+    async function chooseFolder() {
+        const f = await selectFolder();
+        if (f) setFolder(f);
+    }
 
-  const onIndex = async () => {
-    if (!folder) return alert('Choose folder first');
-    await indexFolder(folder);
-    alert('Indexing started / completed (depending on dataset)');
-  };
+    async function index() {
+        if (!folder) return;
+        setIsIndexing(true);
+        await indexFolder(folder);
+        setIsIndexing(false);
+    }
 
-  const onSearch = async () => {
-    if (!query) return;
-    const res = await search(query);
-    setResults(res);
-  };
+    async function doSearch() {
+        if (!query) return;
+        const x = await search(query);
+        setResults(x);
+    }
 
-  return (
-    <div style={{ padding: 18 }}>
-      <h2>Local Photo Search</h2>
+    return (
+        <div style={appStyles.app}>
+            <div style={appStyles.container}>
+                <header style={appStyles.header}>
+                    <h1 style={appStyles.title}>Photos</h1>
+                    <p style={appStyles.subtitle}>AI-powered photo search</p>
+                </header>
 
-      <div style={{ marginBottom: 10 }}>
-        <button onClick={onChooseFolder}>Choose folder</button>
-        <span style={{ marginLeft: 10 }}>{folder ?? 'No folder chosen'}</span>
-      </div>
+                <div style={appStyles.searchContainer}>
+                    <div style={appStyles.searchIcon}>
+                        <Search size={20} />
+                    </div>
+                    <input
+                        style={{
+                            ...appStyles.searchInput,
+                            ...(searchFocused && {
+                                boxShadow:
+                                    "0 4px 16px rgba(102, 126, 234, 0.15), 0 0 0 2px rgba(102, 126, 234, 0.3)",
+                            }),
+                        }}
+                        placeholder="Search your photos..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && doSearch()}
+                        onFocus={() => setSearchFocused(true)}
+                        onBlur={() => setSearchFocused(false)}
+                    />
+                </div>
 
-      <div style={{ marginBottom: 10 }}>
-        <button onClick={onIndex} disabled={!folder || loading}>
-          {loading ? 'Working...' : 'Index folder'}
-        </button>
-      </div>
+                <div style={appStyles.actions}>
+                    <button
+                        style={{
+                            ...appStyles.btn,
+                            ...appStyles.btnPrimary,
+                            ...(hoveredBtn === "primary" && {
+                                transform: "translateY(-2px)",
+                                boxShadow:
+                                    "0 6px 16px rgba(102, 126, 234, 0.4)",
+                            }),
+                        }}
+                        onClick={chooseFolder}
+                        onMouseEnter={() => setHoveredBtn("primary")}
+                        onMouseLeave={() => setHoveredBtn(null)}
+                    >
+                        <Folder size={18} />
+                        <span>Choose Folder</span>
+                    </button>
 
-      <div style={{ marginBottom: 10 }}>
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search text..." style={{ width: 400 }} />
-        <button onClick={onSearch} style={{ marginLeft: 8 }}>Search</button>
-      </div>
+                    <button
+                        style={{
+                            ...appStyles.btn,
+                            ...appStyles.btnSecondary,
+                            ...(!folder || isIndexing
+                                ? appStyles.btnDisabled
+                                : {}),
+                            ...(hoveredBtn === "secondary" &&
+                                !(!folder || isIndexing) && {
+                                    background: "#f8f9fa",
+                                    transform: "translateY(-2px)",
+                                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                                }),
+                        }}
+                        disabled={!folder || isIndexing}
+                        onClick={index}
+                        onMouseEnter={() => setHoveredBtn("secondary")}
+                        onMouseLeave={() => setHoveredBtn(null)}
+                    >
+                        <RefreshCw
+                            size={18}
+                            style={
+                                isIndexing
+                                    ? { animation: "spin 1s linear infinite" }
+                                    : {}
+                            }
+                        />
+                        <span>
+                            {isIndexing ? "Indexing..." : "Index Photos"}
+                        </span>
+                    </button>
+                </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
-        {results.map((r, i) => (
-          <ImageCard key={i} result={r} thumbnailUrl={thumbnailUrl} openPath={openPath} />
-        ))}
-      </div>
-    </div>
-  );
-}
+                {folder && (
+                    <div style={appStyles.folderInfo}>
+                        <Folder size={16} />
+                        <span>{folder}</span>
+                    </div>
+                )}
 
-function ImageCard({ result, thumbnailUrl, openPath }: { result: Result; thumbnailUrl: (p: string) => Promise<string>; openPath: (p: string) => void }) {
-  const [thumb, setThumb] = useState<string | null>(null);
+                {results.length > 0 && (
+                    <div style={appStyles.resultsSection}>
+                        <h2 style={appStyles.resultsTitle}>
+                            Results ({results.length})
+                        </h2>
+                        <div style={appStyles.grid}>
+                            {results.map((r, i) => (
+                                <PhotoCard
+                                    key={i}
+                                    path={r.path}
+                                    score={r.score ?? 0}
+                                    fileUrl={fileUrl}
+                                    openPath={openPath}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
 
-  React.useEffect(() => {
-    let mounted = true;
-    thumbnailUrl(result.path).then((url) => {
-      if (mounted) setThumb(url);
-    }).catch(() => {
-      // ignore
-    });
-    return () => { mounted = false; };
-  }, [result.path, thumbnailUrl]);
+                {results.length === 0 && query && (
+                    <div style={appStyles.emptyState}>
+                        <Search size={48} />
+                        <p style={appStyles.emptyStateText}>No photos found</p>
+                        <span style={appStyles.emptyStateSubtext}>
+                            Try a different search term
+                        </span>
+                    </div>
+                )}
+            </div>
 
-  return (
-    <div style={{ border: '1px solid #ddd', padding: 8 }}>
-      <img src={thumb ?? ''} alt={result.path} style={{ width: '100%', height: 160, objectFit: 'cover' }} />
-      <div style={{ marginTop: 6 }}>
-        <div style={{ fontSize: 12, color: '#333' }}>{result.path}</div>
-        <div style={{ fontSize: 12, color: '#666' }}>{result.score ? result.score.toFixed(3) : ''}</div>
-        <button onClick={() => openPath(result.path)} style={{ marginTop: 6 }}>Open</button>
-      </div>
-    </div>
-  );
+            <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+          /* Mobile responsive adjustments handled via inline styles */
+        }
+      `}</style>
+        </div>
+    );
 }
