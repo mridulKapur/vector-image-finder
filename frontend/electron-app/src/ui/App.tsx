@@ -5,8 +5,7 @@ import { PhotoCard } from "./components/PhotoCard";
 import { appStyles } from "@/ui/styles/appStyles";
 
 export default function App() {
-    const { selectFolder, indexFolder, search, fileUrl, openPath, loading } =
-        useApi();
+    const { selectFolder, indexFolder, search, fileUrl, openPath } = useApi();
     const [folder, setFolder] = useState<string | null>(null);
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<SearchResult[]>([]);

@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from .router_index import  router as index_router
-from .router_search import router as search_router
-from .router_thumbnail import router as thumbnail_router
+from ..api.routes.index import  router as index_router
+from ..api.routes.search import router as search_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Photo indexing and searching")
