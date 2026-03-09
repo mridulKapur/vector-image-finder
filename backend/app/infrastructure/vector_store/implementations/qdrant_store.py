@@ -4,8 +4,8 @@ from qdrant_client import QdrantClient
 from qdrant_client.http import models as rest
 from qdrant_client.models import PointStruct
 
-from backend.store.base import VectorStore, VectorPoint
-from ...app.config import QDRANT_URL, QDRANT_COLLECTION, EMBED_DIM
+from app.infrastructure.vector_store.base import VectorStore, VectorPoint
+from app.core.config import QDRANT_URL, QDRANT_COLLECTION, EMBED_DIM
 
 
 class QdrantVectorStore(VectorStore):

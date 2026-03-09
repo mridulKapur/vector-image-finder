@@ -6,7 +6,7 @@ from typing import List
 class EmbeddingModel(ABC):
 
     @abstractmethod
-    def embed_image(self, path: str) -> List[float]:
+    def embed_images(self, images) -> List[float]:
         pass
 
     @abstractmethod

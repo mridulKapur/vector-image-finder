@@ -1,1 +1,0 @@
-VectorPoint = dict

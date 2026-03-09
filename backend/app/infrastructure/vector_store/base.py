@@ -9,7 +9,7 @@ class VectorStore(ABC):
 
     # Add new points in the vector DB
     @abstractmethod
-    def upsert_points(self, points: List[VectorPoint]) -> None:
+    def upsert_points(self, points: List[VectorPoint] , metadata) -> None:
         pass
 
     # Search for new points in the vector DB

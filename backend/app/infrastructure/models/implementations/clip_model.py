@@ -5,7 +5,7 @@ import torch
 from PIL import Image
 
 from ..base import EmbeddingModel
-from ..config import CLIP_MODEL
+from app.core.config import CLIP_MODEL
 
 
 class CLIPEmbeddingModel(EmbeddingModel):
@@ -23,15 +23,19 @@ class CLIPEmbeddingModel(EmbeddingModel):
                 device=self._device
             )
 
-    def embed_image(self, path: str) -> List[float]:
-        img = Image.open(path).convert("RGB")
-        tensor = self._preprocessor(img).unsqueeze(0).to(self._device)
+    def embed_images(self, images):
+        def embed_image(img: Image) -> List[float]:
+            tensor = self._preprocessor(img).unsqueeze(0).to(self._device)
 
-        with torch.no_grad():
-            emb = self._model.encode_image(tensor)
-            emb = emb / emb.norm(dim=1, keepdim=True)
+            with torch.no_grad():
+                emb = self._model.encode_image(tensor)
+                emb = emb / emb.norm(dim=1, keepdim=True)
 
-        return emb.cpu().numpy()[0].tolist()
+            return emb.cpu().numpy()[0].tolist()
+        
+        embeddings = [embed_image(image) for image in images]
+        
+        return embeddings
 
     def embed_text(self, text: str) -> List[float]:
         tokens = clip.tokenize([text]).to(self._device)

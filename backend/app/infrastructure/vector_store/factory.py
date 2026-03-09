@@ -1,5 +1,5 @@
 from .base import VectorStore
-from implementations.qdrant_store import QdrantVectorStore
+from .implementations.qdrant_store import QdrantVectorStore
 
 
 _vector_store: VectorStore | None = None

@@ -1,6 +1,6 @@
 # embedding_model/factory.py
-from base import EmbeddingModel
-from implementations.clip_model import CLIPEmbeddingModel
+from .base import EmbeddingModel
+from .implementations.clip_model import CLIPEmbeddingModel
 
 
 _model_instance: EmbeddingModel | None = None
