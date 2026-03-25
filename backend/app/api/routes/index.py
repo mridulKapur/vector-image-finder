@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from app.domain.indexing.service import IndexingService
+from app.services.indexing.service import IndexingService
 from app.api.dependencies import get_indexing_service
 
 router = APIRouter(prefix="/index", tags=["index"])

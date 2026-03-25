@@ -23,18 +23,15 @@ class CLIPEmbeddingModel(EmbeddingModel):
                 device=self._device
             )
 
-    def embed_images(self, images):
-        def embed_image(img: Image) -> List[float]:
-            tensor = self._preprocessor(img).unsqueeze(0).to(self._device)
+    def embed_image(self,img: Image) -> List[float]:
+        tensor = self._preprocessor(img).unsqueeze(0).to(self._device)
+        with torch.no_grad():
+            emb = self._model.encode_image(tensor)
+            emb = emb / emb.norm(dim=1, keepdim=True)
+        return emb.cpu().numpy()[0].tolist()
 
-            with torch.no_grad():
-                emb = self._model.encode_image(tensor)
-                emb = emb / emb.norm(dim=1, keepdim=True)
-
-            return emb.cpu().numpy()[0].tolist()
-        
-        embeddings = [embed_image(image) for image in images]
-        
+    def embed_images(self, images:List[Image.Image]) -> List[float]:
+        embeddings = [self.embed_image(image) for image in images]
         return embeddings
 
     def embed_text(self, text: str) -> List[float]:

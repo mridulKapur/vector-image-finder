@@ -26,10 +26,27 @@ export function useApi() {
     const search = useCallback(async (q: string): Promise<SearchResult[]> => {
         setLoading(true);
         try {
-            const res = await window.electronAPI.search(q);
-            // backend returns { results: [{path, score}] }
-            console.log(res?.results);
-            return res?.results || [];
+            const res = await fetch("http://localhost:8000/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ query: q })
+            });
+            if (!res.ok) {
+                console.error("Search failed", await res.text());
+                return [];
+            }
+            const data = await res.json();
+            
+            // Map the backend's PointStruct response to the local SearchResult required format
+            return data.map((point: any) => ({
+                path: point.payload?.url || point.payload?.id || String(point.id),
+                score: point.score
+            }));
+        } catch (e) {
+            console.error("Error calling search API", e);
+            return [];
         } finally {
             setLoading(false);
         }

@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path='')
 
 QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
-QDRANT_COLLECTION = os.getenv("QDRANT_COLLECTION", "photos")
+QDRANT_COLLECTION = os.getenv("QDRANT_COLLECTION", "images")
 EMBED_DIM = int(os.getenv("EMBED_DIM", "512"))
 
 CLIP_MODEL = "ViT-B/32"

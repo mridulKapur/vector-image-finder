@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Search, Folder, RefreshCw } from "lucide-react";
+import { useState, useRef } from "react";
+import { Search, Folder, RefreshCw, Upload } from "lucide-react";
 import { useApi, type SearchResult } from "@/ui/hooks/useApi";
 import { PhotoCard } from "./components/PhotoCard";
 import { appStyles } from "@/ui/styles/appStyles";
@@ -10,8 +10,10 @@ export default function App() {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<SearchResult[]>([]);
     const [isIndexing, setIsIndexing] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const [searchFocused, setSearchFocused] = useState(false);
     const [hoveredBtn, setHoveredBtn] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     async function chooseFolder() {
         const f = await selectFolder();
@@ -23,6 +25,31 @@ export default function App() {
         setIsIndexing(true);
         await indexFolder(folder);
         setIsIndexing(false);
+    }
+
+    async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        
+        setIsUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            
+            const res = await fetch("http://localhost:8000/upload", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await res.json();
+            console.log("Upload successful:", data);
+        } catch (error) {
+            console.error("Upload failed:", error);
+        } finally {
+            setIsUploading(false);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
+        }
     }
 
     async function doSearch() {
@@ -110,6 +137,35 @@ export default function App() {
                             {isIndexing ? "Indexing..." : "Index Photos"}
                         </span>
                     </button>
+
+                    <button
+                        style={{
+                            ...appStyles.btn,
+                            ...appStyles.btnSecondary,
+                            ...(isUploading ? appStyles.btnDisabled : {}),
+                            ...(hoveredBtn === "upload" && !isUploading && {
+                                background: "#f8f9fa",
+                                transform: "translateY(-2px)",
+                                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                            }),
+                        }}
+                        disabled={isUploading}
+                        onClick={() => fileInputRef.current?.click()}
+                        onMouseEnter={() => setHoveredBtn("upload")}
+                        onMouseLeave={() => setHoveredBtn(null)}
+                    >
+                        <Upload
+                            size={18}
+                            style={isUploading ? { animation: "spin 1s linear infinite" } : {}}
+                        />
+                        <span>{isUploading ? "Uploading..." : "Upload File"}</span>
+                    </button>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        style={{ display: "none" }}
+                        onChange={handleFileUpload}
+                    />
                 </div>
 
                 {folder && (

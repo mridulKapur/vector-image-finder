@@ -18,6 +18,7 @@ ENV/
 # VS Code settings
 .vscode/
 .settings/
+uploads/
 
 # Environment variables
 .env

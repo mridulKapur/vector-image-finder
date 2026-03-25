@@ -30,6 +30,7 @@ class QdrantVectorStore(VectorStore):
             )
 
     def upsert_points(self, points: List[VectorPoint]) -> None:
+        print("points",points)
         qdrant_points = [
             PointStruct(
                 id=p["id"],
@@ -38,6 +39,7 @@ class QdrantVectorStore(VectorStore):
             )
             for p in points
         ]
+        print(qdrant_points)
         self._client.upsert(
             collection_name=QDRANT_COLLECTION,
             points=qdrant_points
@@ -50,4 +52,5 @@ class QdrantVectorStore(VectorStore):
             limit=limit,
             with_payload=True
         )
+        print("result",result)
         return result.points
